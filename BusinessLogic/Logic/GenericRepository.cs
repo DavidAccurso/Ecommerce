@@ -3,21 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLogic.Data;
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Logic
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : ClaseBase
     {
-        public Task<IReadOnlyList<T>> GetAllAsync()
+        private readonly MarketDbContext _context;
+        public GenericRepository(MarketDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<T> GetByIdAsync(int id)
+        public async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Set<T>().ToListAsync();
+        }
+
+        public async Task<T> GetByIdAsync(int id)
+        {
+            return await _context.Set<T>().FindAsync(id);
         }
     }
 }

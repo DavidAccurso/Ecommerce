@@ -13,9 +13,9 @@ namespace WebApi.Controllers
     [ApiController]
     public class ProductoController : ControllerBase
     {
-        private readonly IProductoRepository _productoRepository;
+        private readonly IGenericRepository<Producto> _productoRepository;
 
-        public ProductoController(IProductoRepository productoRepository) : base()
+        public ProductoController(IGenericRepository<Producto> productoRepository) : base()
         {
             _productoRepository = productoRepository;
         }
@@ -23,14 +23,14 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Producto>>> GetProductos()
         {
-            var productos = await _productoRepository.GetProductosAsync();
+            var productos = await _productoRepository.GetAllAsync();
             return Ok(productos);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Producto>> GetProducto(int id)
         {
-            return await _productoRepository.GetPRoductoByIdAsync(id);
+            return await _productoRepository.GetByIdAsync(id);
         }
     }
 }
