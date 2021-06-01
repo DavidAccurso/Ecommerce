@@ -3,21 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLogic.Data;
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Logic
 {
     public class ProductoRepository : IProductoRepository
     {
-        public Task<Producto> GetPRoductoByIdAsync(int id)
+        private readonly MarketDbContext _context;
+        public ProductoRepository(MarketDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<Producto> GetPRoductoByIdAsync(int id)
+        {
+            return await _context.Producto
+                .Include(p => p.Marca)
+                .Include(p => p.Categoria)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Task<IReadOnlyList<Producto>> GetProductosAsync()
+        public async Task<IReadOnlyList<Producto>> GetProductosAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Producto
+                .Include(p => p.Marca)
+                .Include(p => p.Categoria)
+                .ToListAsync();
         }
     }
 }
