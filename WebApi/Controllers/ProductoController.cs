@@ -25,12 +25,12 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductoDto>>> GetProductos()
+        public async Task<ActionResult<List<ProductoDto>>> GetProductos([FromQuery] ProductoSpecificationsParams productParams)
         {
-            var spec = new ProductoWithCategoriasAndMarcaSpecification();
+            var spec = new ProductoWithCategoriasAndMarcaSpecification(productParams);
             var productos = await _productoRepository.GetAllWithSpec(spec);
 
-            return Ok( _mapper.Map<IReadOnlyList<Producto>, IReadOnlyList<ProductoDto>>(productos) );
+            return Ok(_mapper.Map<IReadOnlyList<Producto>, IReadOnlyList<ProductoDto>>(productos));
         }
 
         [HttpGet("{id}")]
