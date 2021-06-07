@@ -9,12 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Dtos;
+using WebApi.Errors;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductoController : ControllerBase
+    public class ProductoController : BaseApiController
     {
         private readonly IGenericRepository<Producto> _productoRepository;
         private readonly IMapper _mapper;
@@ -40,6 +39,9 @@ namespace WebApi.Controllers
             //spec debe incluir logica de la ocndicion de la consulta y relaciones entre entidades (produ marca y categ)
             var spec = new ProductoWithCategoriasAndMarcaSpecification(id);
             var producto = await _productoRepository.GetByIdWithSpec(spec);
+
+            if (producto == null)
+                return NotFound(new CodeErrorResponse(404, "El producto no existe"));
 
             return _mapper.Map<Producto, ProductoDto>(producto);
         }
