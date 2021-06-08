@@ -35,21 +35,26 @@ namespace WebApi
             services.AddTransient<IProductoRepository, ProductoRepository>();
 
             services.AddControllers();
+
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsRule", rule =>
+                { 
+                    rule.AllowAnyHeader().AllowAnyMethod().WithOrigins("*"); 
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseStatusCodePagesWithReExecute("/errors", "?code={0}");
 
             app.UseRouting();
+
+            app.UseCors("CorsRule");
 
             app.UseAuthorization();
 
