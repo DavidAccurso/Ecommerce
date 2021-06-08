@@ -9,8 +9,10 @@ namespace Core.Entities.Specifications
     public class ProductoWithCategoriasAndMarcaSpecification : BaseSpecification<Producto>
     {
         public ProductoWithCategoriasAndMarcaSpecification(ProductoSpecificationsParams productParams)
-            : base(x => (!productParams.Marca.HasValue || x.MarcaId == productParams.Marca) && 
-                        (!productParams.Categoria.HasValue || x.CategoriaId == productParams.Categoria))
+            : base(x => 
+            (string.IsNullOrEmpty(productParams.Search) || x.Nombre.Contains(productParams.Search)) &&
+            (!productParams.Marca.HasValue || x.MarcaId == productParams.Marca) && 
+            (!productParams.Categoria.HasValue || x.CategoriaId == productParams.Categoria))
         {
             AddInclude(p => p.Categoria);
             AddInclude(p => p.Marca);

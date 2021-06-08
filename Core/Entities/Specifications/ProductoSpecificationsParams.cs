@@ -21,5 +21,7 @@ namespace Core.Entities.Specifications
             get => _pageSize;
             set => _pageSize = (value > MaxPageSixe ? MaxPageSixe : value);
         }
+
+        public string Search { get; set; }
     }
 }
